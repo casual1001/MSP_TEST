@@ -59,19 +59,19 @@ object Form1: TForm1
   object SpInprocRecognizer1: TSpInprocRecognizer
     AutoConnect = False
     ConnectKind = ckRunningOrNew
-    Left = 392
-    Top = 304
+    Left = 384
+    Top = 40
   end
   object SpInProcRecoContext1: TSpInProcRecoContext
     AutoConnect = False
     ConnectKind = ckRunningOrNew
-    Left = 400
-    Top = 248
+    Left = 368
+    Top = 288
   end
   object SpVoice1: TSpVoice
     AutoConnect = False
     ConnectKind = ckRunningOrNew
-    Left = 440
-    Top = 352
+    Left = 376
+    Top = 168
   end
 end
