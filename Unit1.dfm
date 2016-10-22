@@ -48,19 +48,19 @@ object Form1: TForm1
     Text = 'ComboBox2'
   end
   object Button3: TButton
-    Left = 16
-    Top = 192
-    Width = 75
+    Left = 312
+    Top = 128
+    Width = 161
     Height = 25
-    Caption = 'Button3'
+    Caption = 'Say "Hello"'
     TabOrder = 4
     OnClick = Button3Click
   end
   object SpInprocRecognizer1: TSpInprocRecognizer
     AutoConnect = False
     ConnectKind = ckRunningOrNew
-    Left = 256
-    Top = 248
+    Left = 392
+    Top = 304
   end
   object SpInProcRecoContext1: TSpInProcRecoContext
     AutoConnect = False
@@ -71,7 +71,7 @@ object Form1: TForm1
   object SpVoice1: TSpVoice
     AutoConnect = False
     ConnectKind = ckRunningOrNew
-    Left = 264
-    Top = 328
+    Left = 440
+    Top = 352
   end
 end
