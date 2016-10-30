@@ -71,7 +71,6 @@ object Form1: TForm1
     Height = 25
     Caption = 'Add'
     TabOrder = 3
-    OnClick = btnAddClick
   end
   object Memo1: TMemo
     Left = 16
@@ -92,21 +91,12 @@ object Form1: TForm1
       'cat')
     TabOrder = 5
   end
-  object CheckBox1: TCheckBox
-    Left = 16
-    Top = 351
-    Width = 97
-    Height = 17
-    Caption = 'Enable Speech'
-    TabOrder = 6
-    OnClick = CheckBox1Click
-  end
   object Edit1: TEdit
     Left = 96
     Top = 381
     Width = 193
     Height = 21
-    TabOrder = 7
+    TabOrder = 6
   end
   object btnRemove: TButton
     Left = 376
@@ -114,8 +104,15 @@ object Form1: TForm1
     Width = 75
     Height = 25
     Caption = 'Remove'
+    TabOrder = 7
+  end
+  object Button1: TButton
+    Left = 576
+    Top = 536
+    Width = 75
+    Height = 25
+    Caption = 'Button1'
     TabOrder = 8
-    OnClick = btnRemoveClick
   end
   object SpInprocRecognizer1: TSpInprocRecognizer
     AutoConnect = False
@@ -152,7 +149,13 @@ object Form1: TForm1
   object SpMMAudioIn1: TSpMMAudioIn
     AutoConnect = False
     ConnectKind = ckRunningOrNew
-    Left = 576
-    Top = 448
+    Left = 624
+    Top = 440
+  end
+  object SpFileStream1: TSpFileStream
+    AutoConnect = False
+    ConnectKind = ckRunningOrNew
+    Left = 648
+    Top = 360
   end
 end

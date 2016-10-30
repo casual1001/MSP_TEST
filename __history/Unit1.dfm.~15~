@@ -1,0 +1,167 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 646
+  ClientWidth = 773
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label1: TLabel
+    Left = 16
+    Top = 384
+    Width = 74
+    Height = 13
+    Caption = 'Phrase to add: '
+  end
+  object Label2: TLabel
+    Left = 16
+    Top = 5
+    Width = 62
+    Height = 13
+    Caption = 'Speaker List:'
+  end
+  object Label3: TLabel
+    Left = 16
+    Top = 64
+    Width = 76
+    Height = 13
+    Caption = 'Recognizer List:'
+  end
+  object cbbSpeakers: TComboBox
+    Left = 16
+    Top = 24
+    Width = 457
+    Height = 21
+    TabOrder = 0
+    Text = 'cbbSpeakers'
+    OnChange = cbbSpeakersChange
+  end
+  object cbbRecognizers: TComboBox
+    Left = 16
+    Top = 83
+    Width = 457
+    Height = 21
+    TabOrder = 1
+    Text = 'cbbRecognizers'
+    OnChange = cbbRecognizersChange
+  end
+  object Button3: TButton
+    Left = 504
+    Top = 22
+    Width = 161
+    Height = 25
+    Caption = 'Say "Hello"'
+    TabOrder = 2
+    OnClick = Button3Click
+  end
+  object btnAdd: TButton
+    Left = 295
+    Top = 379
+    Width = 75
+    Height = 25
+    Caption = 'Add'
+    TabOrder = 3
+    OnClick = btnAddClick
+  end
+  object Memo1: TMemo
+    Left = 16
+    Top = 424
+    Width = 457
+    Height = 193
+    TabOrder = 4
+  end
+  object ListBox1: TListBox
+    Left = 16
+    Top = 128
+    Width = 457
+    Height = 217
+    ItemHeight = 13
+    Items.Strings = (
+      'apple'
+      'dog'
+      'cat')
+    TabOrder = 5
+  end
+  object CheckBox1: TCheckBox
+    Left = 16
+    Top = 351
+    Width = 97
+    Height = 17
+    Caption = 'Enable Speech'
+    TabOrder = 6
+    OnClick = CheckBox1Click
+  end
+  object Edit1: TEdit
+    Left = 96
+    Top = 381
+    Width = 193
+    Height = 21
+    TabOrder = 7
+  end
+  object btnRemove: TButton
+    Left = 376
+    Top = 379
+    Width = 75
+    Height = 25
+    Caption = 'Remove'
+    TabOrder = 8
+    OnClick = btnRemoveClick
+  end
+  object Button1: TButton
+    Left = 576
+    Top = 536
+    Width = 75
+    Height = 25
+    Caption = 'Button1'
+    TabOrder = 9
+    OnClick = Button1Click
+  end
+  object SpInprocRecognizer1: TSpInprocRecognizer
+    AutoConnect = False
+    ConnectKind = ckRunningOrNew
+    Left = 632
+    Top = 112
+  end
+  object Context1: TSpInProcRecoContext
+    AutoConnect = False
+    ConnectKind = ckRunningOrNew
+    OnRecognition = Context1Recognition
+    OnHypothesis = Context1Hypothesis
+    Left = 568
+    Top = 368
+  end
+  object SpVoice1: TSpVoice
+    AutoConnect = False
+    ConnectKind = ckRunningOrNew
+    Left = 568
+    Top = 176
+  end
+  object Category1: TSpObjectTokenCategory
+    AutoConnect = False
+    ConnectKind = ckRunningOrNew
+    Left = 576
+    Top = 232
+  end
+  object Token1: TSpObjectToken
+    AutoConnect = False
+    ConnectKind = ckRunningOrNew
+    Left = 576
+    Top = 288
+  end
+  object SpMMAudioIn1: TSpMMAudioIn
+    AutoConnect = False
+    ConnectKind = ckRunningOrNew
+    Left = 576
+    Top = 448
+  end
+end

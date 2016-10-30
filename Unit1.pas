@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.OleServer, SpeechLib_TLB,activeX,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.OleServer, SpeechLib_TLB,activeX, comobj,
   Vcl.StdCtrls;
 
 type
@@ -18,15 +18,16 @@ type
     btnAdd: TButton;
     Category1: TSpObjectTokenCategory;
     Token1: TSpObjectToken;
-    SpMMAudioIn1: TSpMMAudioIn;
     Memo1: TMemo;
     ListBox1: TListBox;
-    CheckBox1: TCheckBox;
     Label1: TLabel;
     Edit1: TEdit;
     btnRemove: TButton;
     Label2: TLabel;
     Label3: TLabel;
+    Button1: TButton;
+    SpMMAudioIn1: TSpMMAudioIn;
+    SpFileStream1: TSpFileStream;
     procedure Button3Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure cbbSpeakersChange(Sender: TObject);
@@ -36,21 +37,13 @@ type
     procedure Context1Recognition(ASender: TObject; StreamNumber: Integer;
       StreamPosition: OleVariant; RecognitionType: TOleEnum;
       const Result: ISpeechRecoResult);
-    procedure CheckBox1Click(Sender: TObject);
-    procedure btnAddClick(Sender: TObject);
-    procedure btnRemoveClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
     speechInitialized : boolean;
 
-    hr : HRESULT;
-    Grammar : ISpGrammarBuilder;
-    ruleTopLevel: ISpeechGrammarRule;
-    ruleListItems: ISpeechGrammarRule;
-    stateAfterSelect: ISpeechGrammarRuleState;
-
+    grammar: ISpRecoGrammar;
     procedure ListAllRecognizers;
     procedure ListAllSpeakers;
     procedure releaseAllRecognizers;
@@ -91,115 +84,47 @@ begin
 end;
 
 function TForm1.ReBuildGrammar:boolean;
-var
-  i: integer;
-  count: integer;
-  PropValue: OleVariant;
 begin
-  result := false;
-  if not checkbox1.Checked then
-    exit;
-  try
-    ruleListItems.Clear;
-    count := listbox1.Items.Count;
-    for i := 0 to count-1 do
-    begin
-      ruleListItems.InitialState.AddWordTransition(nil,listbox1.Items[i],'',SGLexical,
-          Listbox1.Items[i],i,propValue,1);
-    end;
-    grammar.Rules.Commit;
-  except
-    on e: exception do
-      memo1.Lines.Add('Exception caught when rebuilding dynamic Listbox rule. \r\n\r\n'+e.Message);
-  end;
 
 
 end;
 
 procedure TForm1.InitializeSpeech;
 var
-  PropValue : OleVariant;
-  hStateTravel : Pointer;
+  prop:  SPPROPERTYINFO;
+  spStateHandle: pointer;
 begin
   Memo1.Lines.Add('Initializing objects.....');
   try
+
     Category1.SetId(SpeechCategoryAudioIn,false);
-    Token1.SetId(Category1.Default,SpeechCategoryAudioIn,false);
+    Token1.SetId(Category1.Default,Category1.Id,false);
     Context1.Recognizer.AudioInput := Token1.DefaultInterface;
-    hr := S_OK;
-    hr := Context1.CreateGrammar(0,grammar);
 
+    grammar := Context1.CreateGrammar(0) as ISpRecoGrammar;
+    grammar.GetRule(nil,1,SRATopLevel or SRADefaultToActive,1,spStateHandle);
+    grammar.AddWordTransition(spStateHandle,nil,'red',' ',SPWT_LEXICAL,1,prop);
 
+    grammar.GetRule(nil,2,SRATopLevel or SRADefaultToActive,1,spStateHandle);
+    grammar.AddWordTransition(spStateHandle,nil,'dog',' ',SPWT_LEXICAL,1,prop);
+    grammar.AddWordTransition(spStateHandle,nil,'cat',' ',SPWT_LEXICAL,1,prop);
 
+    grammar.GetRule(nil,3,SRATopLevel or SRADefaultToActive,1,spStateHandle);
+    grammar.AddWordTransition(spStateHandle,nil,'orange',' ',SPWT_LEXICAL,1,prop);
+    grammar.AddWordTransition(spStateHandle,nil,'apple',' ',SPWT_LEXICAL,1,prop);
 
-    hr := grammar.GetRule('Travel',0,SRATopLevel or SRADynamic,true,hStateTravel);
-    if succeeded(hr) then
-    begin
-      hr := grammar.AddWordTransition(hStateTravel,nil,'fly to Seattle',' ',SPWT_LEXICAL,1,nil);
-    end;
-    if succeeded(hr) then
-    begin
-      hr := grammar.AddWordTransition(hStateTravel,nil,'fly to New York',' ',SPWT_LEXICAL,1,nil);
-    end;
-    if succeeded(hr) then
-    begin
-      hr := grammar.AddWordTransition(hStateTravel,nil,'fly to Washington DC',' ',SPWT_LEXICAL,1,nil);
-    end;
-    if succeeded(hr) then
-    begin
-      hr := grammar.AddWordTransition(hStateTravel,nil,'drive to Seattle',' ',SPWT_LEXICAL,1,nil);
-    end;
-    if succeeded(hr) then
-    begin
-      hr := grammar.AddWordTransition(hStateTravel,nil,'drive to New York',' ',SPWT_LEXICAL,1,nil);
-    end;
-    if succeeded(hr) then
-    begin
-      hr := grammar.AddWordTransition(hStateTravel,nil,'drive to Washington DC',' ',SPWT_LEXICAL,1,nil);
-    end;
+    grammar.Commit(0);
+    grammar.SetRuleState('', nil, SPRS_ACTIVE);
+  //  grammar.SetRuleIdState(2,SPRS_ACTIVE);
+  //  context1.Recognizer.State := SRSActive;
 
-
-
-
-  //  ruleToplevel := grammar.Rules.Add('TopLevelRule',SRATopLevel or SRADynamic,1);
- //   ruleListItems := grammar.Rules.Add('ListItemsRule',SRADynamic,2);
-    stateAfterSelect.AddRuleTransition(nil,ruleListItems,'',1,PropValue,1.0);
-    RebuildGrammar;
- //   grammar.CmdSetRuleState('TopLevelRule',SGDSActive);
-    context1.Recognizer.State := SRSActive;
 
     speechInitialized := true;
 
   except
-
+    showmessage('except');
   end;
 end;
-
-procedure TForm1.btnAddClick(Sender: TObject);
-begin
-  if trim(edit1.Text)<>'' then
-  begin
-    if listbox1.Items.IndexOf(trim(edit1.Text))=-1 then
-    begin
-      listbox1.Items.Add(trim(edit1.Text));
-      if checkbox1.Checked then
-        RebuildGrammar();
-    end;
-  end;
-end;
-
-procedure TForm1.btnRemoveClick(Sender: TObject);
-begin
-  if listbox1.ItemIndex = -1 then
-  begin
-    showmessage('please select an item to remove!');
-    exit;
-  end;
-  listbox1.DeleteSelected;
-  if checkbox1.Checked then
-    reBuildGrammar();
-end;
-
 
 procedure TForm1.ListAllRecognizers;
 var
@@ -277,14 +202,6 @@ begin
   spVoice1.Speak('i am awake',0);
 end;
 
-procedure TForm1.CheckBox1Click(Sender: TObject);
-begin
-  if checkbox1.Checked then
-    enabledSpeech
-  else
-    disabledSpeech;
-end;
-
 procedure TForm1.cbbSpeakersChange(Sender: TObject);
 begin
   if cbbSpeakers.ItemIndex >=  0 then
@@ -308,9 +225,10 @@ procedure TForm1.Context1Hypothesis(ASender: TObject; StreamNumber: Integer;
 var
   e: ISPeechPhraseElement;
 begin
+  e := result.PhraseInfo.Elements.Item(0);
   memo1.Lines.Add('Hypothesis: '+ result.PhraseInfo.GetText(0,-1,true) + ', ' +
                  streamNumber.ToString()+', '+vartostr(streamPosition));
-  e := result.PhraseInfo.Elements.Item(0);
+
   memo1.Lines.Add(format('%.1f',[e.EngineConfidence*100])+'%');
 
 end;
@@ -321,9 +239,10 @@ procedure TForm1.Context1Recognition(ASender: TObject; StreamNumber: Integer;
 var
   e: ISPeechPhraseElement;
 begin
+  e := result.PhraseInfo.Elements.Item(0);
   Memo1.Lines.Add('Recognition: '+ result.PhraseInfo.GetText(0,-1,true)+', '+
         streamNumber.ToString()+', '+vartostr(streamposition));
-  e := result.PhraseInfo.Elements.Item(0);
+
   memo1.Lines.Add(format('EngineConfidence: %.1f',[e.EngineConfidence*100])+'%');
   memo1.Lines.Add('RequiredConfidence: '+ vartostr(e.RequiredConfidence));
   memo1.Lines.Add('ActualConfidnece: '+ vartostr(e.ActualConfidence));
@@ -336,9 +255,6 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   speechInitialized := false;
-//  context1.ConnectTo(SpInprocRecognizer1.CreateRecoContext);
-
-
 end;
 
 procedure TForm1.FormDestroy(Sender: TObject);
@@ -361,7 +277,7 @@ begin
     cbbRecognizers.ItemIndex := 4;
     cbbRecognizersChange(cbbRecognizers);
   end;
-
+  initializeSpeech;
 end;
 
 end.
