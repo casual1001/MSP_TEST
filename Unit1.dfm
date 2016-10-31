@@ -113,49 +113,38 @@ object Form1: TForm1
     Height = 25
     Caption = 'Button1'
     TabOrder = 8
+    OnClick = Button1Click
   end
   object SpInprocRecognizer1: TSpInprocRecognizer
     AutoConnect = False
     ConnectKind = ckRunningOrNew
-    Left = 632
-    Top = 112
+    Left = 520
+    Top = 136
   end
   object Context1: TSpInProcRecoContext
     AutoConnect = False
     ConnectKind = ckRunningOrNew
     OnRecognition = Context1Recognition
     OnHypothesis = Context1Hypothesis
-    Left = 568
-    Top = 368
+    Left = 648
+    Top = 192
   end
   object SpVoice1: TSpVoice
     AutoConnect = False
     ConnectKind = ckRunningOrNew
-    Left = 568
-    Top = 176
+    Left = 512
+    Top = 72
   end
   object Category1: TSpObjectTokenCategory
     AutoConnect = False
     ConnectKind = ckRunningOrNew
-    Left = 576
-    Top = 232
+    Left = 664
+    Top = 72
   end
   object Token1: TSpObjectToken
     AutoConnect = False
     ConnectKind = ckRunningOrNew
-    Left = 576
-    Top = 288
-  end
-  object SpMMAudioIn1: TSpMMAudioIn
-    AutoConnect = False
-    ConnectKind = ckRunningOrNew
-    Left = 624
-    Top = 440
-  end
-  object SpFileStream1: TSpFileStream
-    AutoConnect = False
-    ConnectKind = ckRunningOrNew
-    Left = 648
-    Top = 360
+    Left = 656
+    Top = 136
   end
 end

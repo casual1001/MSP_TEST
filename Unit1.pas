@@ -26,8 +26,6 @@ type
     Label2: TLabel;
     Label3: TLabel;
     Button1: TButton;
-    SpMMAudioIn1: TSpMMAudioIn;
-    SpFileStream1: TSpFileStream;
     procedure Button3Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure cbbSpeakersChange(Sender: TObject);
@@ -39,6 +37,7 @@ type
       const Result: ISpeechRecoResult);
     procedure FormShow(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
   private
     { Private declarations }
     speechInitialized : boolean;
@@ -102,6 +101,7 @@ begin
     Context1.Recognizer.AudioInput := Token1.DefaultInterface;
 
     grammar := Context1.CreateGrammar(0) as ISpRecoGrammar;
+    {
     grammar.GetRule(nil,1,SRATopLevel or SRADefaultToActive,1,spStateHandle);
     grammar.AddWordTransition(spStateHandle,nil,'red',' ',SPWT_LEXICAL,1,prop);
 
@@ -114,6 +114,9 @@ begin
     grammar.AddWordTransition(spStateHandle,nil,'apple',' ',SPWT_LEXICAL,1,prop);
 
     grammar.Commit(0);
+    }
+    grammar.LoadCmdFromFile('d:\test\g.grxml',SPLO_STATIC );
+
     grammar.SetRuleState('', nil, SPRS_ACTIVE);
   //  grammar.SetRuleIdState(2,SPRS_ACTIVE);
   //  context1.Recognizer.State := SRSActive;
@@ -178,24 +181,11 @@ begin
 
 end;
 
-{
 
-Function TSRRule.AddWord (Word : String; Value : string = ''; Separator : char = '|') : integer;
-var
-  OleValue : OleVariant;
+procedure TForm1.Button1Click(Sender: TObject);
 begin
-  result := 0;
-  if Fwordlist.IndexOf(Word) = -1 then
-     begin
-       OleValue := Value;
-       Fwordlist.Add(Word);
-       FRule.InitialState.AddWordTransition(nil,  word, Separator, SPWT_LEXICAL, FRuleName+'_value',Fwordlist.Count, OleValue, 1.0);
-       FWordCount := Fwordlist.Count;
-       result := FWordCount;
-     end;
+  context1.Recognizer.State := SRSActive;
 end;
-}
-
 
 procedure TForm1.Button3Click(Sender: TObject);
 begin
